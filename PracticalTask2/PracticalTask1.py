@@ -1,4 +1,5 @@
-from my_robot import *
+from assistant import *
 
-r = Robot_Cleaner('SSV')
-r.sayHi()
+p = program_assistant('SSV', 'планирование')
+
+r = program_assistant('SSV2', 'уборка')
