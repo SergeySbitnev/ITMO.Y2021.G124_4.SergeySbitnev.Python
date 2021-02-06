@@ -60,4 +60,8 @@ class robot_assistant(assistant):
 		print('Начало уборки... (загатовка для многопоточности)')
 		for i in range(0, self.length*self.width):
 			time.sleep(1)
-			print('X'),
+			print('X')
+#Класс исключения - если имя помощника уже существует
+class found_name(Exception):
+	def __intn__(self, text):
+		self.text = text

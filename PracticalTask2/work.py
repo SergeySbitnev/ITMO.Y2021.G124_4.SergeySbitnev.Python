@@ -14,13 +14,21 @@ def add_assist():
 		print('0. Назад')
 		otv = input('\nВыберите действие: ')
 
-		if otv=='1':
-			name = input('\nВведите имя помощника: ')
-			assistants.append(program_assistant(name, 'программа-планировщик'))
-			finish_def()
-		if otv=='2':
-			name = input('\nВведите имя помощника: ')
-			assistants.append(robot_assistant(name, 'робот-уборщик'))
+		if otv == '1' or otv == '2':
+			try:
+				name = input('\nВведите имя помощника: ')
+				for item in assistants:
+					if item.name == name:
+						raise found_name('Помощник с таким именем уже существует.')
+			except ValueError:
+				print('Error type of value!')
+			except found_name as e:
+				print(e)
+			else:
+				if otv=='1':
+					assistants.append(program_assistant(name, 'программа-планировщик'))
+				if otv=='2':
+					assistants.append(robot_assistant(name, 'робот-уборщик'))
 			finish_def()
 #Список помощников
 def list_assist(key=1):
