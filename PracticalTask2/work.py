@@ -1,6 +1,7 @@
-import os
+import os, asyncio, time, random
 from msvcrt import getch
 from assistant import *
+from threading import Thread
 
 assistants = []
 #Добавить помощника
@@ -52,7 +53,9 @@ def task_assist():
 		if len(assistants) != 0 and otv > '0' and otv <=str(len(assistants)):
 
 			if str(type(assistants[int(otv)-1])) == "<class 'assistant.robot_assistant'>":
-				assistants[int(otv)-1].cleaner()
+				thread1 = Thread(target = assistants[int(otv)-1].cleaner, args=())
+				thread1.start()
+				#assistants[int(otv)-1].cleaner()
 			if str(type(assistants[int(otv)-1])) == "<class 'assistant.program_assistant'>":
 				print('\n1. Добавить встречу')
 				print('2. Просмотреть встречи')
@@ -69,7 +72,17 @@ def task_assist():
 def delete_assist():
 	list_assist(0)
 	if len(assistants) > 0:
-		print('delete')
+		print('{0}. Асинхронное исключение всех помощников'.format(len(assistants)+1))
+		print('0. Назад')
+		otv = input('\nВыберите помощника которого необходимо исключить из работы: ')
+		if otv > '0' and otv <= str(len(assistants)):
+			del assistants[int(otv)-1]
+			print('Помощник исключен...')
+		elif otv == str(len(assistants)+1):
+			print('\nАсинхронное исключение всех помощников:')
+			asyncio.run(run_del_all())
+		elif otv != '0':
+			print('Не правильно выбран помощник. Попробуйте еще раз...')
 
 	finish_def()
 #Завершить работу программы
@@ -78,8 +91,23 @@ def exit():
 	print('Программа завершила работу.')
 	finish_def()
 
-
 #Конец функции
 def finish_def():
 	print('\nPress any key to continue...')
 	getch()
+#Функция для асинхронного удаления всех помощников
+async def delete_all_assist(i):
+	t = random.randint(2, 10)
+	name = i.name
+	print('Исключение помощника: {0}, это займет: {1} сек.'.format(name, t))
+	await asyncio.sleep(random.randint(2, 10))
+	assistants.remove(i)
+	print('Помощник {0} исключен из работы.'.format(name))
+#
+async def run_del_all():
+	all_assist = []
+	for item in assistants:
+		all_assist.append(asyncio.create_task(delete_all_assist(item)))
+	for item in all_assist:
+		await item
+	all_assist.clear()
