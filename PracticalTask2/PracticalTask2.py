@@ -1,5 +1,16 @@
 import os, work
 
+def decorator_main_menu(function_to_decorate):
+	def around_function_todecorate():
+		f = open('log.txt', 'a')
+		f.write('1')
+		function_to_decorate()
+		f.write('2')
+		f.close()
+		return around_function_todecorate()
+
+
+
 otv = ''
 while otv != '0':
 	os.system('cls')
@@ -11,7 +22,7 @@ while otv != '0':
 	otv = input('\nВыберите действие: ')
 	
 	if otv=='1':
-		work.add_assist()
+		decorator_main_menu(work.add_assist)
 	if otv=='2':
 		work.list_assist()
 	if otv=='3':
